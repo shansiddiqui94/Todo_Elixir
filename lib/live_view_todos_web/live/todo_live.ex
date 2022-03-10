@@ -22,15 +22,19 @@ defmodule LiveViewTodosWeb.TodoLive do
         todo = Todos.get_todo!(id)
     
         case Todos.delete_todo(todo) do
-          {:ok, _} ->
-            socket = update(socket, :todos, fn todos -> &Enum.reject(&1.id == todo.id) end)
-            {:noreply, socket}
+          {:ok, deleted_todo} ->
+            socket =
+              update(socket, :todos, fn todos ->
+                Enum.reject(todos, &(&1.id == deleted_todo.id))
+              end)
+    
+            {:noreply, put_flash(socket, :info, "Todo '#{deleted_todo.id}' deleted")}
     
           {:error, _} ->
-            {:noreply, socket}
+            {:noreply, put_flash(socket, :error, "An error occured while deleting a todo")}
         end
       end
-      
+
     def handle_info({Todos, [:todo | _], _}, socket) do
         {:noreply, fetch(socket)}
       end

@@ -13,9 +13,6 @@ defmodule LiveViewTodos.Todos do
   def subscribe do 
     Phoenix.PubSub.subscribe(LiveViewTodos.PubSub, @topic)
   end
-  defp broadcast_change({:ok, result}, event) do
-    Phoenix.PubSub.broadcast(LiveViewTodos.PubSub, @topic, {__MODULE__, event, result})
-  end
   
   defp broadcast_change({:ok, data} = result, event) do
     Phoenix.PubSub.broadcast(LiveViewTodos.PubSub, @topic, {__MODULE__, event, data})
