@@ -17,6 +17,13 @@ defmodule LiveViewTodos.Todos do
     Phoenix.PubSub.broadcast(LiveViewTodos.PubSub, @topic, {__MODULE__, event, result})
   end
   
+  defp broadcast_change({:ok, data} = result, event) do
+    Phoenix.PubSub.broadcast(LiveViewTodos.PubSub, @topic, {__MODULE__, event, data})
+  end
+
+  defp broadcast_change(result, _event) do
+    result
+  end
 
   @doc """
   Returns the list of todos.

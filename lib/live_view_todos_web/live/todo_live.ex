@@ -18,19 +18,19 @@ defmodule LiveViewTodosWeb.TodoLive do
         {:noreply, socket}
     end
 
-    def handle_event("delete", %{"id" => id}, socket)do
+    def handle_event("delete", %{"id" => id}, socket) do
         todo = Todos.get_todo!(id)
     
-        case Todos.delete_todo(todo, %{delete: todo.id}) do
-         {:ok, _todo} -> 
-            socket = update(socket, :todos, fn todos -> Enum.reject(todos, fn t -> t.id == todo.id end) end)
-              {:noreply, socket}
-          
-            {:error, _} ->
-              {:noreply, socket}
+        case Todos.delete_todo(todo) do
+          {:ok, _} ->
+            socket = update(socket, :todos, fn todos -> &Enum.reject(&1.id == todo.id) end)
+            {:noreply, socket}
+    
+          {:error, _} ->
+            {:noreply, socket}
         end
-    end
-
+      end
+      
     def handle_info({Todos, [:todo | _], _}, socket) do
         {:noreply, fetch(socket)}
       end
