@@ -1,3 +1,4 @@
+#This document is responsible or my changeSets 
 defmodule LiveViewTodos.Todos do
   @moduledoc """
   The Todos context.
@@ -10,10 +11,10 @@ defmodule LiveViewTodos.Todos do
 
   @topic inspect(__MODULE__)
 
-  def subscribe do 
+  def subscribe do
     Phoenix.PubSub.subscribe(LiveViewTodos.PubSub, @topic)
   end
-  
+
   defp broadcast_change({:ok, data} = result, event) do
     Phoenix.PubSub.broadcast(LiveViewTodos.PubSub, @topic, {__MODULE__, event, data})
   end
@@ -32,7 +33,7 @@ defmodule LiveViewTodos.Todos do
 
   """
   def list_todos do
-    Repo.all(Todo)
+   Repo.all(Todo)
   end
 
   @doc """
@@ -69,6 +70,9 @@ defmodule LiveViewTodos.Todos do
     |> Repo.insert()
     |> broadcast_change([:todo, :created])
   end
+#|> means take this and inject it before 
+ # broadcast_change([:todo, :created], Repo.insert(Todo.changeset(%Todo{}, attrs)))
+
 
   @doc """
   Updates a todo.
@@ -86,7 +90,7 @@ defmodule LiveViewTodos.Todos do
     todo
     |> Todo.changeset(attrs)
     |> Repo.update()
-    |>broadcast_change([:todo, :updated])
+    |> broadcast_change([:todo, :updated])
   end
 
   @doc """
@@ -103,9 +107,8 @@ defmodule LiveViewTodos.Todos do
   """
   def delete_todo(%Todo{} = todo) do
     todo
-      |> Repo.delete()
-      |> broadcast_change([:todo, :deleted])
-
+    |> Repo.delete()
+    |> broadcast_change([:todo, :deleted])
   end
 
   @doc """
@@ -119,5 +122,11 @@ defmodule LiveViewTodos.Todos do
   """
   def change_todo(%Todo{} = todo, attrs \\ %{}) do
     Todo.changeset(todo, attrs)
+  end
+
+  def remove_all do
+   %Todo{}
+    |> Repo.delete_all()
+    |> broadcast_change([:todo, :deleted])
   end
 end

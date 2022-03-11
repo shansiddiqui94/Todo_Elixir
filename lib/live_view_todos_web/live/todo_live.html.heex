@@ -1,6 +1,6 @@
-<div>
+<div class="todoStyle">
   <form action="#" phx-submit="add">
-    <%= text_input :todo, :title, placeholder: "What do you want to get done" %>
+    <%= text_input :todo, :title, placeholder: "Describe your task..." %>
     <%= submit "Add", phx_disable_with: "Adding..." %>
   </form>
 
@@ -11,4 +11,8 @@
       <%= todo.title %>
     </div>
   <% end %>
+  <div>
+        <button class="add" phx-click="clear">Clear All</button>
+    </div>
 </div>
+
